@@ -1,0 +1,38 @@
+
+body{
+    font-family: monospace;
+    color: antiquewhite;
+    background: darkblue ;
+
+  }
+
+h1{
+    font-size: 60px;
+    padding: 10;
+    
+}
+
+mainText{
+    font-size: 40px;
+    line-height: 1.5;
+    padding: 10;
+}
+
+subText{
+    font-size: 30px;
+    line-height: 1.5;
+    color: aliceblue;
+    padding: 10;
+
+}
+
+.buttonStyle {
+    background-color: white; /* Green */
+    border: none;
+    color: darkblue;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+  }

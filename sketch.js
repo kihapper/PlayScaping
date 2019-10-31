@@ -59,11 +59,12 @@ function setup() {
 
 function draw(){
   image(video, 0, 0, windowWidth, windowHeight);
-  textSize(60);
-  fill(0, 0, 255);
+  textSize(120);
+  fill(10, 10, 255);
+  textFont('monospace');
   textAlign(CENTER);
   text(oneWordRes, windowWidth/2, windowHeight/2);
-  text(confidence_score + "%", windowWidth/2, windowHeight/2 + 100);
+  text(confidence_score + "%", windowWidth/2, windowHeight/2 + 150);
 
 }
 
