@@ -11,10 +11,29 @@ let timeStamp;
 //const myVoice = new p5.Speech();
 
 function setup() {
+
+  createCanvas(windowWidth, windowHeight);
+  background(0);
+  frameRate(20);
+  var constraints = {
+    audio: false,
+    video: {
+      facingMode: "environment",
+      frameRate: 15
+    }
+  };
+
+  video = createCapture(constraints);
+  video.elt.setAttribute('playsinline', '');
+  video.hide();
+
+  /*
   noCanvas();
   // Create a camera input
   video = createCapture(VIDEO);
   // Initialize the Image Classifier method with MobileNet and the video as the second argument
+  */
+  
   classifier = ml5.imageClassifier('MobileNet', video, modelReady);
 
   select('#start').mousePressed(function() {
@@ -32,6 +51,10 @@ function setup() {
   // speechEnded function will be called when an utterance is finished
   // Read more at p5.speech's onEnd property: http://ability.nyu.edu/p5.js-speech/
   //!——— myVoice.onEnd = speechEnded;
+}
+
+function draw(){
+  image(video, 0, 0, windowWidth, windowHeight);
 }
 
 const voiceAlert = new SpeechSynthesisUtterance('Let us Start')
@@ -105,11 +128,10 @@ function gotResult(err, results) {
       select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
     else if(confidence_score < 20){
-      voiceAlert.text = `I'm not sure. It might be a ${oneWordRes}` ;
+      voiceAlert.text = `It might be a ${oneWordRes}` ;
       speechSynthesis.speak(voiceAlert);
       select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
-    
 
   }
 }
