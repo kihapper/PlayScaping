@@ -9,7 +9,7 @@ let currentIndex = 0;
 let isPlaying = false;
 
 //put the target words here...
-const words = ['restraunt','television','cab','barbershop','drum','toilet seat','paper towel','truck','banana','keyboard'];
+const words = ['keyboard','wig','toilet seat','paper towel','restraunt','television','cab','barbershop','drum','truck','banana'];
 
 //debug
 //const words = ['mask','restraunt'];
@@ -45,12 +45,21 @@ function setup() {
   //When model is ready, call modelReady();
   classifier = ml5.imageClassifier('MobileNet', video, modelReady);
 
+
+  //!! ————注意 Tricky Mobile Alert 注意——————!!!
+  // speech synthesis function on mobile, only works when the user volunteering PRESSED a button
+  // So it is important to trigger the button command on pressing start
+
   select('#start').mousePressed(function() {
+    speechSynthesis.speak(voiceAlert);
+
     select('#status').html('Game Started, please turn up volume.');
     playNextWord();
   });
 
   select('#next').mousePressed(function() {
+    speechSynthesis.speak(voiceAlert);
+
     select('#status').html('Game Started, please turn up volume.');
     currentIndex++;
     if (currentIndex >= words.length) {
@@ -63,7 +72,7 @@ function setup() {
 
 
 //——————— plain javascript for speech synthesis—————
-const voiceAlert = new SpeechSynthesisUtterance('Can you find me these things?')
+const voiceAlert = new SpeechSynthesisUtterance('Can you find me things?')
 
 voiceAlert.addEventListener('end', function(event) { 
   console.log('Utterance has finished being spoken after ' + event.elapsedTime + ' milliseconds.');
@@ -87,10 +96,10 @@ function playNextWord() {
   //speechSynthesis.speak(voiceAlert);
   isPlaying = true;
   currentWord = words[currentIndex];
-  select('#instruction').html(`Go and find ${currentWord}`);
-
+  select('#instruction').html(`Go and find ${currentWord}!!`);
+  
   // Call the classifyVideo function to start classifying the video
-  classifyVideo();
+  //classifyVideo();
 }
 
 function modelReady() {
