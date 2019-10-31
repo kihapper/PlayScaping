@@ -7,6 +7,9 @@ const words = ['banana', 'watch', 'shoe', 'book', 'cellphone', 'keyboard', 'shir
 
 let timeStamp;
 
+let oneWordRes;
+let confidence_score;
+
 //VOICE
 //const myVoice = new p5.Speech();
 
@@ -18,7 +21,8 @@ function setup() {
   var constraints = {
     audio: false,
     video: {
-      facingMode: "environment",
+      facingMode: "user",
+      //facingMode: "environment",
       frameRate: 15
     }
   };
@@ -55,6 +59,12 @@ function setup() {
 
 function draw(){
   image(video, 0, 0, windowWidth, windowHeight);
+  textSize(60);
+  fill(0, 0, 255);
+  textAlign(CENTER);
+  text(oneWordRes, windowWidth/2, windowHeight/2);
+  text(confidence_score + "%", windowWidth/2, windowHeight/2 + 100);
+
 }
 
 const voiceAlert = new SpeechSynthesisUtterance('Let us Start')
@@ -97,10 +107,10 @@ function gotResult(err, results) {
   // The results are in an array ordered by confidence.
   // Get the first result string
   const result = results[0].label;
-  const confidence_score = floor(results[0].confidence*100);
+   confidence_score = floor(results[0].confidence*100);
 
   // Split the first result string by coma and get the first word
-  const oneWordRes = result.split(',')[0];
+   oneWordRes = result.split(',')[0];
   // Get the top 3 results as strings in an array
   // Read more about map function here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
   const top3Res = results.map(r => r.label);
@@ -138,5 +148,4 @@ function gotResult(err, results) {
 
 function speechEnded() {
   if (isPlaying) classifyVideo();
-  console.log("isPlaying is :" + isPlaying);
 }
