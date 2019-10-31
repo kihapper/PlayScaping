@@ -3,7 +3,7 @@ let video;
 let currentWord;
 let currentIndex = 0;
 let isPlaying = false;
-const words = ['mask', 'watch', 'shoe', 'book', 'cellphone', 'keyboard', 'shirt', 'pants', 'cup'];
+const words = ['banana', 'watch', 'shoe', 'book', 'cellphone', 'keyboard', 'shirt', 'pants', 'cup'];
 
 let timeStamp;
 
@@ -38,16 +38,15 @@ const voiceAlert = new SpeechSynthesisUtterance('Let us Start')
 voiceAlert.addEventListener('end', function(event) { 
   console.log('Utterance has finished being spoken after ' + event.elapsedTime + ' milliseconds.');
 
-  var temptimeStamp = millis();
-  var timeDiff = temptimeStamp - timeStamp;
+  // var temptimeStamp = millis();
+  // var timeDiff = temptimeStamp - timeStamp;
 
-  console.log('TimeDiff : ' + timeDiff);
-  console.log('temptimeStamp' + temptimeStamp);
+  // console.log('TimeDiff : ' + timeDiff);
+  // console.log('temptimeStamp' + temptimeStamp);
 
   speechEnded();
 
-  if(timeDiff > 3000 ){
-  }
+ 
 });
 
 function playNextWord() {
@@ -100,13 +99,13 @@ function gotResult(err, results) {
       speechSynthesis.speak(voiceAlert);
       select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
-    else if(confidence_score >= 30 && confidence_score < 50){
+    else if(confidence_score >= 20 && confidence_score < 50){
       voiceAlert.text = `That should be a ${oneWordRes}?` ;
       speechSynthesis.speak(voiceAlert);
       select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
-    else if(confidence_score < 30){
-      voiceAlert.text = `It might be a ${oneWordRes}` ;
+    else if(confidence_score < 20){
+      voiceAlert.text = `I'm not sure. It might be a ${oneWordRes}` ;
       speechSynthesis.speak(voiceAlert);
       select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
