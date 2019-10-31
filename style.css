@@ -3,36 +3,47 @@ body{
     font-family: monospace;
     color: antiquewhite;
     background: darkblue ;
-
   }
 
 h1{
     font-size: 60px;
     padding: 10;
-    
 }
 
-mainText{
-    font-size: 40px;
-    line-height: 1.5;
-    padding: 10;
+.mainText{
+    font-size: calc(1em + 3vw);
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-subText{
-    font-size: 30px;
-    line-height: 1.5;
-    color: aliceblue;
-    padding: 10;
-
+.subText{
+    font-size: calc(1em + 1vw);
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .buttonStyle {
     background-color: white; /* Green */
     border: none;
     color: darkblue;
-    padding: 15px 20px;
+    width: 200px;
+    padding: 15px 15px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 30px;
+  }
+
+  #start{
+    position: fixed;
+    top: 10px;
+    right: 15px;
+  }
+
+  #next{
+    position: fixed;
+    top: 85px;
+    right: 15px;
   }

@@ -1,50 +1,57 @@
+//Forked from the ml5js image classification example
+//https://github.com/ml5js/ml5-examples/tree/release/p5js/ImageClassification
+//Added mobile compatibility 
+
 let classifier;
 let video;
 let currentWord;
 let currentIndex = 0;
 let isPlaying = false;
-const words = ['wig'];
 
-let timeStamp;
+//put the target words here...
+const words = ['restraunt','television','cab','barbershop','drum','toilet seat','paper towel','truck','banana','keyboard'];
 
-let oneWordRes;
-let confidence_score;
+//debug
+//const words = ['mask','restraunt'];
 
-//VOICE
-//const myVoice = new p5.Speech();
+let oneWordRes = "loading..";
+let confidence_score = "";
+
+
+//——————— Below is p5.js————————————————————————————
+
 
 function setup() {
 
   createCanvas(windowWidth, windowHeight);
   background(0);
   frameRate(20);
+
+  //Setting up the video....
   var constraints = {
     audio: false,
     video: {
+      //Change this part to swap the camera
       //facingMode: "user",
       facingMode: "environment",
       frameRate: 15
     }
   };
-
   video = createCapture(constraints);
   video.elt.setAttribute('playsinline', '');
   video.hide();
 
-  /*
-  noCanvas();
-  // Create a camera input
-  video = createCapture(VIDEO);
-  // Initialize the Image Classifier method with MobileNet and the video as the second argument
-  */
   
+  //When model is ready, call modelReady();
   classifier = ml5.imageClassifier('MobileNet', video, modelReady);
 
   select('#start').mousePressed(function() {
+    select('#status').html('Game Started, please turn up volume.');
     playNextWord();
   });
 
   select('#next').mousePressed(function() {
+    select('#status').html('Game Started, please turn up volume.');
     currentIndex++;
     if (currentIndex >= words.length) {
       currentIndex = 0;
@@ -52,10 +59,18 @@ function setup() {
     playNextWord();
   });
 
-  // speechEnded function will be called when an utterance is finished
-  // Read more at p5.speech's onEnd property: http://ability.nyu.edu/p5.js-speech/
-  //!——— myVoice.onEnd = speechEnded;
 }
+
+
+//——————— plain javascript for speech synthesis—————
+const voiceAlert = new SpeechSynthesisUtterance('Can you find me these things?')
+
+voiceAlert.addEventListener('end', function(event) { 
+  console.log('Utterance has finished being spoken after ' + event.elapsedTime + ' milliseconds.');
+  speechEnded();
+});
+//———————————————————————————————————————————————————
+
 
 function draw(){
   image(video, 0, 0, windowWidth, windowHeight);
@@ -67,35 +82,21 @@ function draw(){
   text(confidence_score + "%", windowWidth/2, windowHeight/2 + 150);
 }
 
-const voiceAlert = new SpeechSynthesisUtterance('Let us Start')
-voiceAlert.addEventListener('end', function(event) { 
-  console.log('Utterance has finished being spoken after ' + event.elapsedTime + ' milliseconds.');
-
-  // var temptimeStamp = millis();
-  // var timeDiff = temptimeStamp - timeStamp;
-
-  // console.log('TimeDiff : ' + timeDiff);
-  // console.log('temptimeStamp' + temptimeStamp);
-
-  speechEnded();
-
- 
-});
 
 function playNextWord() {
-
-  speechSynthesis.speak(voiceAlert);
-
+  //speechSynthesis.speak(voiceAlert);
   isPlaying = true;
   currentWord = words[currentIndex];
-  select('#instruction').html(`Go find ${currentWord}!`);
+  select('#instruction').html(`Go and find ${currentWord}`);
+
   // Call the classifyVideo function to start classifying the video
   classifyVideo();
 }
 
 function modelReady() {
   // Change the status of the model once its ready
-  select('#status').html('Model Loaded');
+  oneWordRes = "Press Start";
+  select('#status').html('Model Loaded, press Start Game');
 }
 
 // Get a prediction for the current video frame
@@ -107,7 +108,7 @@ function gotResult(err, results) {
   // The results are in an array ordered by confidence.
   // Get the first result string
   const result = results[0].label;
-   confidence_score = floor(results[0].confidence*100);
+  confidence_score = floor(results[0].confidence*100);
 
   // Split the first result string by coma and get the first word
    oneWordRes = result.split(',')[0];
@@ -117,35 +118,42 @@ function gotResult(err, results) {
   // Find if any of the top 3 result strings includes the current word
   // Read more about find function here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
   const ifFound = top3Res.find(r => r.includes(currentWord))
+
   if (ifFound) {
     // If top 3 results includes the current word
     isPlaying = false;
-    voiceAlert.text = `You found ${currentWord}` ;
+    voiceAlert.text = `Great. You found ${currentWord}. Thank you very much` ;
     speechSynthesis.speak(voiceAlert);
-    select('#message').html(`Oh no, you saw the ${currentWord}. Game Over`);
-
+    select('#instruction').html(`You found the ${currentWord}!!`);
+    select('#status').html('You win, push Next Target for the next level');
   } else {
 
     //Change depending on the probability
     if(confidence_score >= 50){
       voiceAlert.text = `That is definetely ${oneWordRes}` ;
       speechSynthesis.speak(voiceAlert);
-      select('#message').html(`${oneWordRes} : ${confidence_score} %`);
+      //select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
-    else if(confidence_score >= 20 && confidence_score < 50){
+    else if(confidence_score >= 30 && confidence_score < 50){
       voiceAlert.text = `That should be a ${oneWordRes}?` ;
       speechSynthesis.speak(voiceAlert);
-      select('#message').html(`${oneWordRes} : ${confidence_score} %`);
+      //select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
-    else if(confidence_score < 20){
-      voiceAlert.text = `It might be a ${oneWordRes}` ;
+    else if(confidence_score >= 15 && confidence_score < 30){
+      voiceAlert.text = `Not sure, it might be a ${oneWordRes}` ;
       speechSynthesis.speak(voiceAlert);
-      select('#message').html(`${oneWordRes} : ${confidence_score} %`);
+      //select('#message').html(`${oneWordRes} : ${confidence_score} %`);
+    }
+    else if(confidence_score < 15){
+      voiceAlert.text = `I have no idea, is it a ${oneWordRes}?` ;
+      speechSynthesis.speak(voiceAlert);
+      //select('#message').html(`${oneWordRes} : ${confidence_score} %`);
     }
 
   }
 }
 
+//Everytime the speech ends, the video gets classified.
 function speechEnded() {
   if (isPlaying) classifyVideo();
 }
