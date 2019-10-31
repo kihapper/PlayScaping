@@ -3,7 +3,7 @@ let video;
 let currentWord;
 let currentIndex = 0;
 let isPlaying = false;
-const words = ['banana', 'watch', 'shoe', 'book', 'cellphone', 'keyboard', 'shirt', 'pants', 'cup'];
+const words = ['wig'];
 
 let timeStamp;
 
@@ -21,8 +21,8 @@ function setup() {
   var constraints = {
     audio: false,
     video: {
-      facingMode: "user",
-      //facingMode: "environment",
+      //facingMode: "user",
+      facingMode: "environment",
       frameRate: 15
     }
   };
@@ -65,7 +65,6 @@ function draw(){
   textAlign(CENTER);
   text(oneWordRes, windowWidth/2, windowHeight/2);
   text(confidence_score + "%", windowWidth/2, windowHeight/2 + 150);
-
 }
 
 const voiceAlert = new SpeechSynthesisUtterance('Let us Start')
@@ -123,7 +122,7 @@ function gotResult(err, results) {
     isPlaying = false;
     voiceAlert.text = `You found ${currentWord}` ;
     speechSynthesis.speak(voiceAlert);
-    select('#message').html(`You found ${currentWord}!`);
+    select('#message').html(`Oh no, you saw the ${currentWord}. Game Over`);
 
   } else {
 
