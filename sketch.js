@@ -32,8 +32,8 @@ function setup() {
     audio: false,
     video: {
       //Change this part to swap the camera
-      //facingMode: "user",
-      facingMode: "environment",
+      facingMode: "user",
+      //facingMode: "environment",
       frameRate: 15
     }
   };
